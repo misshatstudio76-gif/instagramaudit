@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Instagram Professionnel - Miss Hat Studio</title>
+    <meta name="description" content="Outil d'audit Instagram gratuit pour solopreneurs. Analysez votre compte et obtenez un plan d'action personnalisé en 10 questions.">
+    <style>
+        /* Force responsive sur tous les éléments */
+        * {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Correction pour les éléments avec styles inline */
+        div[style*="grid-template-columns"] {
+            display: block !important;
+        }
+        
+        div[style*="grid-template-columns"] > div {
+            margin-bottom: 15px;
+            width: 100% !important;
+        }
+        
+        /* Force word-wrap sur tout le texte */
+        p, div, span, h1, h2, h3, h4, h5, h6 {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #d1462f 0%, #533745 50%, #ebe7e5 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        /* COULEURS MISS HAT STUDIO */
+        :root {
+            --hat-primary: #d1462f;        /* Terracotta principal */
+            --hat-secondary: #533745;      /* Prune sophistiqué */
+            --hat-accent: #ebe7e5;         /* Crème élégant */
+            --hat-white: #ffffff;          /* Blanc pur */
+            --success-green: #28a745;      /* Vert pour les succès */
+            --warning-yellow: #ffc107;     /* Jaune pour les avertissements */
+            --danger-red: #dc3545;         /* Rouge pour les urgences */
+        }
+
+        .game-container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: 80vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--hat-primary), var(--hat-secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(50px); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .game-area {
+            padding: 20px 15px;
+            min-height: 500px;
+        }
+
+        .story-panel {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--hat-primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .character {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--hat-primary), var(--hat-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .character-info h3 {
+            color: var(--hat-primary);
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .character-role {
+            color: #666;
+            font-style: italic;
+        }
+
+        .dialogue {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--hat-primary);
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid var(--hat-secondary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .question-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: var(--hat-secondary);
+            margin-bottom: 15px;
+        }
+
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .choice-btn {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #333;
+            border: 2px solid #e9ecef;
+            padding: 18px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1em;
+            text-align: left;
+            position: relative;
+            transform: translateY(0);
+            opacity: 0;
+            animation: slideInChoice 0.6s ease forwards;
+        }
+
+        .choice-btn:nth-child(1) { animation-delay: 0.1s; }
+        .choice-btn:nth-child(2) { animation-delay: 0.2s; }
+        .choice-btn:nth-child(3) { animation-delay: 0.3s; }
+        .choice-btn:nth-child(4) { animation-delay: 0.4s; }
+        .choice-btn:nth-child(5) { animation-delay: 0.5s; }
+        .choice-btn:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes slideInChoice {
+            from {
+                transform: translateX(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .choice-btn:hover {
+            background: linear-gradient(135deg, var(--hat-primary), var(--hat-secondary));
+            color: white;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(209, 70, 47, 0.4);
+            border-color: var(--hat-primary);
+        }
+
+        .choice-btn.selected {
+            background: linear-gradient(135deg, var(--hat-primary), var(--hat-secondary));
+            color: white;
+            border-color: var(--hat-primary);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(209, 70, 47, 0.5);
+        }
+
+        .choice-btn.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .insights-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--hat-primary), var(--hat-secondary));
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            transform: translateX(350px);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .insights-popup.show {
+            transform: translateX(0);
+        }
+
+        .insights-popup .insight-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .insights-popup .insight-text {
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        .typing-effect {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(40, end);
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .score-reveal {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: revealScore 0.8s ease forwards;
+        }
+
+        @keyframes revealScore {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .mini-score {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 12px;
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--hat-primary), var(--hat-secondary));
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .notification-toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--success-green);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(350px);
+            transition: transform 0.5s ease;
+            z-index: 1001;
+        }
+
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(209, 70, 47, 0.7);
+            }
+            70% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(209, 70, 47, 0);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(209, 70, 47, 0);
+            }
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin: 5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .floating-element:nth-child(3) { left: 80%; animation-delay: 2s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fcb045;
+            border-radius: 50%;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--hat-primary);
+            border-radius: 10px;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--hat-secondary);
+            box-shadow: 0 0 10px rgba(209, 70, 47, 0.2);
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, var(--hat-primary), var(--hat-secondary));
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(209, 70, 47, 0.3);
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(209, 70, 47, 0.4);
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .score-overview {
+            background: linear-gradient(135deg, var(--hat-secondary), var(--hat-primary));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 25px 0;
+            box-shadow: 0 15px 30px rgba(83, 55, 69, 0.3);
+        }
+
+        .main-score {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .score-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .score-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid;
+        }
+
+        .score-section.excellent {
+            border-left-color: var(--success-green);
+        }
+
+        .score-section.good {
+            border-left-color: var(--warning-yellow);
+        }
+
+        .score-section.needs-work {
+            border-left-color: var(--danger-red);
+        }
+
+        .section-score {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .section-title {
+            color: #666;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .recommendations {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendations h3 {
+            color: var(--hat-primary);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .recommendation-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+
+        .recommendation-item.priority-high {
+            border-left-color: var(--danger-red);
+        }
+
+        .recommendation-item.priority-medium {
+            border-left-color: var(--warning-yellow);
+        }
+
+        .recommendation-item.priority-low {
+            border-left-color: var(--success-green);
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .priority-badge.high {
+            background: var(--danger-red);
+            color: white;
+        }
+
+        .priority-badge.medium {
+            background: var(--warning-yellow);
+            color: #333;
+        }
+
+        .priority-badge.low {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .final-message {
+            background: linear-gradient(135deg, var(--hat-primary), var(--hat-secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(209, 70, 47, 0.3);
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .bonus-btn {
+            background: linear-gradient(135deg, var(--success-green), #20c997);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 2px;
+                font-size: 14px;
+            }
+            
+            .game-container {
+                margin: 2px;
+                border-radius: 12px;
+                width: calc(100% - 4px) !important;
+                min-height: 95vh;
+            }
+            
+            .header {
+                padding: 15px 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.6em;
+                line-height: 1.2;
+            }
+            
+            .header p {
+                font-size: 1em;
+                margin-top: 8px;
+            }
+            
+            .game-area {
+                padding: 10px 8px;
+            }
+            
+            .story-panel {
+                padding: 15px 12px;
+                margin-bottom: 15px;
+            }
+            
+            .character {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3em;
+            }
+            
+            .character-info h3 {
+                font-size: 1.1em;
+            }
+            
+            .dialogue {
+                padding: 15px;
+                font-size: 1em;
+                line-height: 1.5;
+            }
+            
+            .question-container {
+                padding: 15px 12px;
+                margin: 15px 0;
+            }
+            
+            .question-title {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+            }
+            
+            .choice-btn {
+                padding: 15px 18px;
+                font-size: 0.95em;
+                line-height: 1.4;
+                margin-bottom: 8px;
+            }
+            
+            .input-field {
+                padding: 12px;
+                font-size: 16px; /* Évite le zoom sur iOS */
+                border-radius: 8px;
+            }
+            
+            .continue-btn {
+                padding: 15px 25px;
+                font-size: 1em;
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .progress-bar {
+                height: 8px;
+                margin: 15px 0;
+            }
+            
+            .score-sections {
+                grid-template-columns: 1fr !important;
+                gap: 12px;
+            }
+            
+            .score-section {
+                padding: 15px;
+            }
+            
+            .section-score {
+                font-size: 2em;
+            }
+            
+            .main-score {
+                font-size: 2.8em !important;
+            }
+            
+            .insights-popup {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+                padding: 15px;
+                transform: translateY(100px);
+                font-size: 0.9em;
+            }
+            
+            .insights-popup.show {
+                transform: translateY(0);
+            }
+            
+            .notification-toast {
+                top: 15px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+                transform: translateY(-100px);
+                text-align: center;
+            }
+            
+            .notification-toast.show {
+                transform: translateY(0);
+            }
+            
+            .action-buttons {
+                padding: 0 10px;
+            }
+            
+            .restart-btn, .bonus-btn {
+                display: block;
+                width: 100%;
+                max-width: 300px;
+                margin: 10px auto;
+                padding: 15px 20px;
+            }
+            
+            .recommendations {
+                padding: 20px 15px;
+            }
+            
+            .recommendation-item {
+                padding: 15px;
+                margin: 12px 0;
+            }
+            
+            .final-message {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+            
+            .final-message h3 {
+                font-size: 1.3em;
+            }
+            
+            .final-message p {
+                font-size: 1em;
+                line-height: 1.5;
+            }
+            
+            /* Corrections FORCÉES pour tous les éléments avec styles inline */
+            div[style*="display: grid"] {
+                display: block !important;
+            }
+            
+            div[style*="grid-template-columns"] {
+                display: block !important;
+            }
+            
+            div[style*="grid-template-columns"] > div {
+                margin-bottom: 15px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            /* Force tous les conteneurs à être responsive */
+            div[style*="padding: 30px"] {
+                padding: 15px !important;
+            }
+            
+            div[style*="padding: 25px"] {
+                padding: 12px !important;
+            }
+            
+            div[style*="padding: 20px"] {
+                padding: 10px !important;
+            }
+            
+            /* Texte responsive */
+            div[style*="font-size: 2.5em"] {
+                font-size: 1.8em !important;
+            }
+            
+            div[style*="font-size: 1.8em"] {
+                font-size: 1.4em !important;
+            }
+            
+            div[style*="font-size: 1.5em"] {
+                font-size: 1.3em !important;
+            }
+            
+            div[style*="font-size: 1.3em"] {
+                font-size: 1.2em !important;
+            }
+            
+            div[style*="font-size: 1.2em"] {
+                font-size: 1.1em !important;
+            }
+            
+            /* Force le contenu à ne pas déborder */
+            .dialogue {
+                max-width: 100% !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            
+            /* Override pour les éléments positionnés */
+            .floating-elements {
+                display: none !important;
+            }
+            
+            /* Améliorer la lisibilité des templates bonus */
+            div[style*="font-family: monospace"] {
+                font-size: 0.8em !important;
+                line-height: 1.4 !important;
+                padding: 12px !important;
+            }
+            
+            /* Optimiser les boutons pour le tactile */
+            .choice-btn {
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+                touch-action: manipulation;
+            }
+            
+            .choice-btn:hover {
+                transform: none !important;
+                scale: none !important;
+            }
+            
+            .choice-btn:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Media query pour très petits écrans */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.4em;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+            }
+            
+            .dialogue {
+                font-size: 0.95em;
+            }
+            
+            .choice-btn {
+                font-size: 0.9em;
+                padding: 12px 15px;
+            }
+            
+            .main-score {
+                font-size: 2.2em !important;
+            }
+            
+            .section-score {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🎩 Audit Instagram Professionnel</h1>
+                <p>Diagnostic expert avec Miss Sherlock Hat - Plan d'action personnalisé garanti</p>
+            </div>
+        </div>
+        
+        <div class="game-area" id="game-content">
+            <!-- Le contenu sera injecté dynamiquement -->
+        </div>
+    </div>
+
+    <script>
+        var audit;
+        
+        function InstagramAudit() {
+            this.currentQuestion = 0;
+            this.userData = {
+                name: '',
+                responses: {},
+                scores: {
+                    profile: 0,
+                    content: 0,
+                    engagement: 0,
+                    monetization: 0,
+                    analytics: 0
+                }
+            };
+            
+            this.animateScore = function(element, finalScore) {
+                var currentScore = 0;
+                var increment = finalScore / 50; // 50 steps d'animation
+                
+                var interval = setInterval(() => {
+                    currentScore += increment;
+                    if (currentScore >= finalScore) {
+                        currentScore = finalScore;
+                        clearInterval(interval);
+                        // Ajouter un effet de celebration si score élevé
+                        if (finalScore >= 70) {
+                            this.celebrateGoodScore();
+                        }
+                    }
+                    element.textContent = Math.round(currentScore) + '%';
+                }, 40);
+            };
+            
+            this.celebrateGoodScore = function() {
+                // Créer des confettis
+                for (var i = 0; i < 20; i++) {
+                    var confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '6px';
+                    confetti.style.height = '6px';
+                    confetti.style.background = ['#fcb045', '#28a745', '#17a2b8', '#6f42c1'][Math.floor(Math.random() * 4)];
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '0px';
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.pointerEvents = 'none';
+                    
+                    var animation = confetti.animate([
+                        { transform: 'translateY(0px) rotate(0deg)', opacity: 1 },
+                        { transform: 'translateY(' + window.innerHeight + 'px) rotate(360deg)', opacity: 0 }
+                    ], {
+                        duration: 2000 + Math.random() * 1000,
+                        easing: 'linear'
+                    });
+                    
+                    document.body.appendChild(confetti);
+                    
+                    animation.onfinish = () => confetti.remove();
+                }
+            };
+            
+            this.generateRadarChart = function(scores) {
+                return '<div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 30px; border-radius: 15px; margin: 25px 0; box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);">' +
+                    '<h3 style="text-align: center; margin-bottom: 25px; font-size: 1.8em;">🎯 ANALYSE MULTI-DIMENSIONNELLE</h3>' +
+                    '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center;">' +
+                    
+                    '<div>' +
+                        '<div style="margin-bottom: 20px;"><strong>Forces détectées :</strong></div>' +
+                        this.getTopStrengths(scores).map(strength => 
+                            '<div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.15); border-radius: 8px;">' +
+                            '<div style="width: 12px; height: 12px; background: #28a745; border-radius: 50%; margin-right: 10px;"></div>' +
+                            strength +
+                            '</div>'
+                        ).join('') +
+                    '</div>' +
+                    
+                    '<div>' +
+                        '<div style="margin-bottom: 20px;"><strong>Points d\'amélioration :</strong></div>' +
+                        this.getTopWeaknesses(scores).map(weakness => 
+                            '<div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.15); border-radius: 8px;">' +
+                            '<div style="width: 12px; height: 12px; background: #dc3545; border-radius: 50%; margin-right: 10px;"></div>' +
+                            weakness +
+                            '</div>'
+                        ).join('') +
+                    '</div>' +
+                    
+                    '</div>' +
+                '</div>';
+            };
+            
+            this.getTopStrengths = function(scores) {
+                var strengths = [];
+                if (scores.profile >= 70) strengths.push('Profil Instagram optimisé');
+                if (scores.content >= 70) strengths.push('Stratégie de contenu maîtrisée');
+                if (scores.engagement >= 70) strengths.push('Communauté très engagée');
+                if (scores.monetization >= 70) strengths.push('Monétisation efficace');
+                if (scores.analytics >= 70) strengths.push('Approche data-driven');
+                
+                if (strengths.length === 0) {
+                    strengths.push('Potentiel énorme à développer');
+                    strengths.push('Base solide pour la croissance');
+                }
+                
+                return strengths;
+            };
+            
+            this.getTopWeaknesses = function(scores) {
+                var weaknesses = [];
+                if (scores.profile < 50) weaknesses.push('Bio et profil à optimiser');
+                if (scores.content < 50) weaknesses.push('Stratégie de contenu à revoir');
+                if (scores.engagement < 50) weaknesses.push('Engagement à booster');
+                if (scores.monetization < 50) weaknesses.push('Monétisation à développer');
+                if (scores.analytics < 50) weaknesses.push('Tracking à mettre en place');
+                
+                if (weaknesses.length === 0) {
+                    weaknesses.push('Optimisations avancées possibles');
+                    weaknesses.push('Scaling des performances');
+                }
+                
+                return weaknesses.slice(0, 3); // Maximum 3 points d'amélioration
+            };
+            
+            this.getScoreMessage = function(score) {
+                if (score >= 80) return '🚀 Niveau Expert';
+                if (score >= 60) return '✨ Bon niveau';
+                if (score >= 40) return '⚡ À améliorer';
+                return '🔥 Priorité absolue';
+            };
+            
+            this.generateAchievementBadges = function(scores, overallScore) {
+                var badges = [];
+                
+                // Badges basés sur les performances
+                if (overallScore >= 80) badges.push({ name: 'Instagram Master', icon: '🏆', desc: 'Score global exceptionnel' });
+                if (overallScore >= 60) badges.push({ name: 'Business Strategist', icon: '🎯', desc: 'Stratégie Instagram solide' });
+                if (scores.engagement >= 70) badges.push({ name: 'Community Builder', icon: '👥', desc: 'Engagement exceptionnel' });
+                if (scores.content >= 70) badges.push({ name: 'Content Creator Pro', icon: '🎨', desc: 'Contenu de qualité' });
+                if (scores.profile >= 80) badges.push({ name: 'Profil Parfait', icon: '⭐', desc: 'Bio et profil optimaux' });
+                if (scores.monetization >= 70) badges.push({ name: 'Money Maker', icon: '💰', desc: 'Monétisation maîtrisée' });
+                if (scores.analytics >= 70) badges.push({ name: 'Data Driven', icon: '📊', desc: 'Approche analytique' });
+                
+                // Badges spéciaux
+                var allGood = Object.values(scores).every(score => score >= 60);
+                if (allGood) badges.push({ name: 'All-Rounder', icon: '🌟', desc: 'Excellent partout' });
+                
+                var hasWeakness = Object.values(scores).some(score => score < 30);
+                if (hasWeakness && overallScore >= 50) badges.push({ name: 'Diamond in the Rough', icon: '💎', desc: 'Potentiel énorme' });
+                
+                if (badges.length === 0) {
+                    badges.push({ name: 'Rising Star', icon: '🌱', desc: 'Prêt à décoller' });
+                    badges.push({ name: 'Future Success', icon: '🚀', desc: 'Énorme potentiel' });
+                }
+                
+                return '<div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 30px; border-radius: 15px; margin: 25px 0; box-shadow: 0 15px 30px rgba(240, 147, 251, 0.3);">' +
+                    '<h3 style="text-align: center; margin-bottom: 25px; font-size: 1.8em;">🏅 BADGES DÉBLOQUÉS</h3>' +
+                    '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">' +
+                    badges.map(badge => 
+                        '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px); transform: scale(0.95); transition: transform 0.3s ease;" onmouseover="this.style.transform=\'scale(1)\'" onmouseout="this.style.transform=\'scale(0.95)\'">' +
+                        '<div style="font-size: 2.5em; margin-bottom: 10px;">' + badge.icon + '</div>' +
+                        '<div style="font-weight: bold; margin-bottom: 5px;">' + badge.name + '</div>' +
+                        '<div style="font-size: 0.9em; opacity: 0.9;">' + badge.desc + '</div>' +
+                        '</div>'
+                    ).join('') +
+                    '</div>' +
+                '</div>';
+            };
+            
+            this.generate30DayActionPlan = function(scores, overallScore) {
+                // Identifier les 3 catégories les plus faibles
+                var weakestAreas = [];
+                var categories = {
+                    profile: { name: 'Profil & Bio', score: scores.profile },
+                    content: { name: 'Stratégie Contenu', score: scores.content },
+                    engagement: { name: 'Engagement', score: scores.engagement },
+                    monetization: { name: 'Monétisation', score: scores.monetization },
+                    analytics: { name: 'Analytics', score: scores.analytics }
+                };
+                
+                // Trier par score croissant pour identifier les priorités
+                var sortedCategories = Object.keys(categories).sort((a, b) => categories[a].score - categories[b].score);
+                
+                // Définir les actions par semaine selon les points faibles
+                var weeklyActions = this.getPersonalizedWeeklyActions(sortedCategories, categories);
+                
+                return '<div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 30px; border-radius: 15px; margin: 25px 0; box-shadow: 0 15px 30px rgba(79, 172, 254, 0.3);">' +
+                    '<h3 style="text-align: center; margin-bottom: 25px; font-size: 1.8em;">📅 TON PLAN D\'ACTION 30 JOURS</h3>' +
+                    '<div style="text-align: center; margin-bottom: 20px; font-size: 0.9em; opacity: 0.9;">Plan personnalisé basé sur tes réponses</div>' +
+                    '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">' +
+                    
+                    '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px;">' +
+                        '<h4>📍 SEMAINE 1 : Diagnostic</h4>' +
+                        weeklyActions.week1.map(action => '<div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; border-left: 3px solid #fff;">• ' + action + '</div>').join('') +
+                    '</div>' +
+                    
+                    '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px;">' +
+                        '<h4>🚀 SEMAINE 2 : Optimisation</h4>' +
+                        weeklyActions.week2.map(action => '<div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; border-left: 3px solid #fff;">• ' + action + '</div>').join('') +
+                    '</div>' +
+                    
+                    '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px;">' +
+                        '<h4>📈 SEMAINE 3 : Croissance</h4>' +
+                        weeklyActions.week3.map(action => '<div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; border-left: 3px solid #fff;">• ' + action + '</div>').join('') +
+                    '</div>' +
+                    
+                    '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px;">' +
+                        '<h4>🎯 SEMAINE 4 : Mesure & Ajustement</h4>' +
+                        weeklyActions.week4.map(action => '<div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; border-left: 3px solid #fff;">• ' + action + '</div>').join('') +
+                    '</div>' +
+                    
+                    '</div>' +
+                    '<div style="text-align: center; margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px;">' +
+                        '<h4>📋 CHECKLIST HEBDOMADAIRE</h4>' +
+                        '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; font-size: 0.9em;">' +
+                            '<div>🔍 Vérifier tes statistiques</div>' +
+                            '<div>💬 Répondre aux commentaires</div>' +
+                            '<div>📱 Publier 3-4 posts</div>' +
+                            '<div>📊 Stories quotidiennes</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            };
+            
+            this.getPersonalizedWeeklyActions = function(sortedCategories, categories) {
+                var actions = {
+                    week1: [],
+                    week2: [],
+                    week3: [],
+                    week4: []
+                };
+                
+                // Actions basées sur les 3 catégories les plus faibles
+                var priority1 = sortedCategories[0]; // Plus faible
+                var priority2 = sortedCategories[1]; // Deuxième plus faible
+                var priority3 = sortedCategories[2]; // Troisième plus faible
+                
+                // SEMAINE 1 - Focus sur la priorité 1
+                if (priority1 === 'profile') {
+                    actions.week1.push("Réécris ta bio avec proposition de valeur claire");
+                    actions.week1.push("Ajoute un call-to-action dans ta bio");
+                    actions.week1.push("Optimise ta photo de profil");
+                    actions.week1.push("Crée 5 highlights cohérents");
+                } else if (priority1 === 'content') {
+                    actions.week1.push("Définis ta ligne éditoriale en 3 thèmes");
+                    actions.week1.push("Planifie 12 posts pour les 3 prochaines semaines");
+                    actions.week1.push("Crée un calendrier éditorial");
+                    actions.week1.push("Analyse tes 10 meilleurs posts passés");
+                } else if (priority1 === 'engagement') {
+                    actions.week1.push("Pose une question dans chaque nouveau post");
+                    actions.week1.push("Réponds à TOUS les commentaires sous 2h");
+                    actions.week1.push("Lance 2 sondages en Stories par jour");
+                    actions.week1.push("Commente 10 comptes de ta niche/jour");
+                } else if (priority1 === 'monetization') {
+                    actions.week1.push("Ajoute un lien dans ta bio vers ton service");
+                    actions.week1.push("Crée une story à la une 'Mes services'");
+                    actions.week1.push("Rédige 3 posts sur ton expertise");
+                    actions.week1.push("Teste 1 CTA par post cette semaine");
+                } else if (priority1 === 'analytics') {
+                    actions.week1.push("Active les Instagram Insights");
+                    actions.week1.push("Note tes stats actuelles (benchmark)");
+                    actions.week1.push("Identifie tes meilleurs créneaux de publication");
+                    actions.week1.push("Analyse qui sont tes vrais followers actifs");
+                }
+                
+                // SEMAINE 2 - Focus sur la priorité 2
+                if (priority2 === 'profile') {
+                    actions.week2.push("Test A/B de 2 versions de bio");
+                    actions.week2.push("Optimise l'ordre de tes highlights");
+                } else if (priority2 === 'content') {
+                    actions.week2.push("Publie ton premier carrousel éducatif");
+                    actions.week2.push("Teste 3 formats différents cette semaine");
+                } else if (priority2 === 'engagement') {
+                    actions.week2.push("Crée ton premier Reel tendance");
+                    actions.week2.push("Organise un live ou Q&A");
+                } else if (priority2 === 'monetization') {
+                    actions.week2.push("Partage un témoignage client/résultat");
+                    actions.week2.push("Présente ton processus de travail");
+                } else if (priority2 === 'analytics') {
+                    actions.week2.push("Compare les performances par format");
+                    actions.week2.push("Identifie tes hashtags les plus efficaces");
+                }
+                
+                // Ajouter des actions communes
+                actions.week2.push("Continue les actions de la semaine 1");
+                actions.week2.push("Documente ce qui fonctionne le mieux");
+                
+                // SEMAINE 3 - Focus sur la priorité 3 + amplification
+                if (priority3 === 'profile') {
+                    actions.week3.push("Finalise ton profil optimisé");
+                } else if (priority3 === 'content') {
+                    actions.week3.push("Crée une série de posts sur un même thème");
+                } else if (priority3 === 'engagement') {
+                    actions.week3.push("Lance ton premier challenge/concours");
+                } else if (priority3 === 'monetization') {
+                    actions.week3.push("Crée ta première offre ou lead magnet");
+                } else if (priority3 === 'analytics') {
+                    actions.week3.push("Mets en place un système de veille concurrent");
+                }
+                
+                actions.week3.push("Amplifie tes meilleurs posts de la semaine 2");
+                actions.week3.push("Collabore avec 2 comptes de ta niche");
+                actions.week3.push("Optimise tes horaires de publication");
+                
+                // SEMAINE 4 - Mesure et ajustement
+                actions.week4.push("Analyse tes performances du mois");
+                actions.week4.push("Identifie tes 3 posts les plus performants");
+                actions.week4.push("Planifie le mois suivant selon tes résultats");
+                actions.week4.push("Crée un template pour tes meilleurs formats");
+                
+                return actions;
+            };
+            
+            this.getPersonalizedFinalMessage = function(baseMessage, businessDesc, servicesTarget, overallScore) {
+                var name = this.userData.name;
+                var activityFocus = businessDesc.toLowerCase().includes('coach') ? 'coaching' : 
+                                  businessDesc.toLowerCase().includes('consultant') ? 'consulting' :
+                                  businessDesc.toLowerCase().includes('formation') ? 'formation' :
+                                  businessDesc.toLowerCase().includes('bijou') ? 'création' :
+                                  businessDesc.toLowerCase().includes('thérap') ? 'thérapie' : 'ton domaine';
+                
+                if (overallScore >= 70) {
+                    return name + ', après cette analyse complète, je suis impressionnée ! Ton approche Instagram dans le ' + activityFocus + ' est déjà solide. ' +
+                           'Avec quelques optimisations stratégiques, tu vas littéralement exploser tes ventes ! ' +
+                           'Tes futurs clients dans "' + servicesTarget + '" vont t\'adorer. 🚀';
+                } else if (overallScore >= 40) {
+                    return name + ', j\'ai identifié exactement ce qui freine ton business Instagram ! ' +
+                           'Tu as des bases correctes pour le ' + activityFocus + ', mais des erreurs critiques t\'empêchent de convertir. ' +
+                           'Suis ce plan d\'action et dans 30 jours, tes clients "' + servicesTarget + '" vont se bousculer ! 💎';
+                } else {
+                    return name + ', soyons franches : ton Instagram ne reflète pas ton expertise en ' + activityFocus + ' ! ' +
+                           'MAIS c\'est une excellente nouvelle ! Tu as un potentiel ÉNORME inexploité. ' +
+                           'Imagine quand tes prospects "' + servicesTarget + '" vont découvrir la vraie toi sur Instagram... ' +
+                           'Prépare-toi à des résultats spectaculaires ! 🔥';
+                }
+            };
+            
+            this.questions = [
+                // Question d'introduction
+                {
+                    id: 'intro',
+                    type: 'input',
+                    character: { name: 'Miss Sherlock Hat', emoji: '🎩', role: 'Auditrice Instagram Expert' },
+                    dialogue: 'Salut ! Moi c\'est Miss Sherlock Hat 🎩<br><br>Je vais faire un audit de ton Instagram pour t\'aider à l\'optimiser !<br><br>En 10 questions stratégiques, tu vas avoir :<br>✅ Ton score détaillé par catégorie<br>✅ Tes erreurs critiques identifiées<br>✅ Un plan d\'action concret et priorisé<br>✅ Mes conseils personnalisés<br><br>Prêt(e) à découvrir comment améliorer ton compte ?',
+                    question: 'Comment tu t\'appelles ?',
+                    field: 'name'
+                },
+                
+                // Question activité - nouvelle
+                {
+                    id: 'business_description',
+                    type: 'input',
+                    character: { name: 'Miss Sherlock Hat', emoji: '💼', role: 'Analyse business' },
+                    dialogue: 'Perfect {{name}} ! Maintenant, parlons business.<br><br>Pour te donner les meilleurs conseils, j\'ai besoin de comprendre EXACTEMENT ce que tu fais.',
+                    question: 'Décris ton activité en une phrase claire :',
+                    field: 'business_description'
+                },
+                
+                // Question services - nouvelle  
+                {
+                    id: 'services_target',
+                    type: 'input',
+                    character: { name: 'Miss Sherlock Hat', emoji: '🎯', role: 'Analyse cible' },
+                    dialogue: 'Parfait ! Maintenant soyons précises sur ce que tu proposes...',
+                    question: 'Décris en une phrase ce que tu vends et à qui (ex: "Bijoux artisanaux pour femmes bohèmes" ou "Thérapie énergétique pour entrepreneurs stressés")',
+                    field: 'services_target'
+                },
+                
+                // Question motivation - nouvelle
+                {
+                    id: 'motivation_story',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '💡', role: 'Analyse positionnement' },
+                    dialogue: 'Last but not least... Ton "pourquoi" c\'est ce qui va te différencier !<br><br>Que tu vendes des bijoux, du coaching ou de la thérapie, ton histoire personnelle est ton atout #1 sur Instagram.',
+                    question: 'Qu\'est-ce qui t\'a poussé(e) à lancer ton activité ?',
+                    choices: [
+                        {
+                            text: 'Une passion créative que je veux partager avec le monde',
+                            score: 9,
+                            category: 'content',
+                            feedback: 'PARFAIT pour Instagram ! La passion créative crée une connexion émotionnelle puissante avec ton audience.'
+                        },
+                        {
+                            text: 'Une expérience personnelle transformante que j\'ai vécue',
+                            score: 10,
+                            category: 'content',
+                            feedback: 'EXCELLENT ! Les stories de transformation personnelle sont ce qui marche le mieux sur Instagram.'
+                        },
+                        {
+                            text: 'Une expertise/compétence que je veux transmettre',
+                            score: 8,
+                            category: 'content',
+                            feedback: 'Très bien ! L\'expertise rassure et crédibilise, surtout dans les services.'
+                        },
+                        {
+                            text: 'L\'envie d\'aider les autres à résoudre un problème',
+                            score: 7,
+                            category: 'content',
+                            feedback: 'Bien ! Mais il faut être plus spécifique sur ton approche unique.'
+                        },
+                        {
+                            text: 'L\'opportunité business que j\'ai identifiée',
+                            score: 5,
+                            category: 'monetization',
+                            feedback: 'Approche pragmatique mais ça manque d\'émotion pour engager sur Instagram.'
+                        },
+                        {
+                            text: 'Je ne sais pas vraiment définir mon "pourquoi"',
+                            score: 2,
+                            category: 'content',
+                            feedback: 'Attention ! Sans "pourquoi" fort, difficile de créer une communauté engagée.'
+                        }
+                    ]
+                },
+                
+                // 1. Profil et Bio
+                {
+                    id: 'bio_conversion',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '🔍', role: 'Analyse du profil' },
+                    dialogue: 'Perfect {{name}} ! Commençons par la BASE : ton profil Instagram.<br><br>Ta bio, c\'est ta vitrine. En 3 secondes, un visiteur décide s\'il te suit ou pas. C\'est CRUCIAL pour la conversion !',
+                    question: 'Ta bio Instagram contient-elle :',
+                    choices: [
+                        {
+                            text: 'Juste mon nom et ce que je fais (freelance, coach...)',
+                            score: 2,
+                            category: 'profile',
+                            feedback: 'Bio basique ! Tu rates 70% des conversions possibles.'
+                        },
+                        {
+                            text: 'Mon expertise + ce que j\'apporte à mes clients',
+                            score: 6,
+                            category: 'profile',
+                            feedback: 'Bien ! Tu commences à vendre ta valeur.'
+                        },
+                        {
+                            text: 'Proposition de valeur claire + call-to-action + lien',
+                            score: 10,
+                            category: 'profile',
+                            feedback: 'PARFAIT ! Bio qui convertit comme une pro !'
+                        },
+                        {
+                            text: 'Je sais pas vraiment, j\'ai écrit au feeling',
+                            score: 1,
+                            category: 'profile',
+                            feedback: 'Aïe ! Ta bio ne travaille pas pour toi. Priorité absolue !'
+                        }
+                    ]
+                },
+                
+                // 2. Stratégie de contenu - PERSONNALISÉ selon l'activité
+                {
+                    id: 'content_strategy',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '📱', role: 'Analyse du contenu' },
+                    dialogue: 'Parfait {{name}} ! Maintenant que je connais ton business "{{business_description}}", parlons de ton contenu !<br><br>90% des solopreneurs font la MÊME erreur : ils montrent seulement leurs produits/services au lieu de créer de la valeur.<br><br>Que tu vendes des bijoux, de la thérapie ou du coaching, tes followers veulent d\'abord APPRENDRE quelque chose !',
+                    question: 'Dans tes posts Instagram, tu partages principalement :',
+                    choices: [
+                        {
+                            text: 'Mes produits/services avec leurs prix et bénéfices',
+                            score: 3,
+                            category: 'content',
+                            feedback: 'Erreur classique ! Instagram n\'est pas un catalogue. Tu dois d\'abord créer de la valeur et de la confiance.'
+                        },
+                        {
+                            text: 'Des conseils gratuits et tips dans ma thématique',
+                            score: 9,
+                            category: 'content',
+                            feedback: 'EXCELLENT ! Tu comprends que donner de la valeur avant de vendre est la clé du succès sur Instagram.'
+                        },
+                        {
+                            text: 'Un mix équilibré : 80% de valeur, 20% de vente',
+                            score: 10,
+                            category: 'content',
+                            feedback: 'PARFAIT ! Tu maîtrises la règle d\'or : éduquer et inspirer avant de vendre.'
+                        },
+                        {
+                            text: 'Mon processus de création/travail (behind-the-scenes)',
+                            score: 8,
+                            category: 'content',
+                            feedback: 'Très bien ! Le behind-the-scenes crée de l\'authenticité, mais pense aussi à éduquer ton audience.'
+                        },
+                        {
+                            text: 'Ma vie personnelle et moments du quotidien',
+                            score: 4,
+                            category: 'content',
+                            feedback: 'L\'authenticité c\'est bien, mais ton audience veut surtout apprendre quelque chose de toi !'
+                        },
+                        {
+                            text: 'Un peu de tout sans vraie stratégie',
+                            score: 2,
+                            category: 'content',
+                            feedback: 'Aucune ligne éditoriale = audience confuse qui ne comprend pas ce que tu fais !'
+                        }
+                    ]
+                },
+                
+                // 3. Fréquence et régularité
+                {
+                    id: 'posting_frequency',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '⏰', role: 'Analyse de régularité' },
+                    dialogue: 'La régularité, c\'est la clé ! <br><br>L\'algorithme Instagram est comme un ami : si tu disparais trop longtemps, il t\'oublie. Et tes abonnés aussi...',
+                    question: 'À quelle fréquence tu publies sur Instagram ?',
+                    choices: [
+                        {
+                            text: 'Quand j\'ai le temps / inspiration (irrégulier)',
+                            score: 2,
+                            category: 'content',
+                            feedback: 'L\'irrégularité tue ta portée ! L\'algorithme te punit.'
+                        },
+                        {
+                            text: '1 post par semaine environ',
+                            score: 4,
+                            category: 'content',
+                            feedback: 'Trop peu ! Tes abonnés t\'oublient entre les posts.'
+                        },
+                        {
+                            text: '3-4 posts par semaine de façon régulière',
+                            score: 9,
+                            category: 'content',
+                            feedback: 'Excellent rythme ! L\'algorithme adore la régularité.'
+                        },
+                        {
+                            text: 'Tous les jours ou presque',
+                            score: 8,
+                            category: 'content',
+                            feedback: 'Très bien, mais attention à ne pas sacrifier la qualité !'
+                        }
+                    ]
+                },
+                
+                // 4. Engagement et interaction - ADAPTÉ selon le niveau détecté
+                {
+                    id: 'engagement_rate',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '💬', role: 'Analyse d\'engagement' },
+                    dialogue: 'Parlons engagement ! C\'est LE chiffre qui compte vraiment.<br><br>{{engagement_intro}}<br><br>Peu importe ton activité (bijoux, thérapie, coaching...), si ton audience n\'interagit pas, ton compte est invisible pour l\'algorithme !',
+                    question: 'En moyenne, tes posts reçoivent (pour 100 abonnés) :',
+                    choices: [
+                        {
+                            text: 'Moins de 3 likes et quasi aucun commentaire',
+                            score: 1,
+                            category: 'engagement',
+                            feedback: 'ALERTE ROUGE ! Engagement catastrophique = compte fantôme. {{name}}, ton contenu n\'atteint pas ton audience !'
+                        },
+                        {
+                            text: '3-8 likes et 1-2 commentaires maximum',
+                            score: 4,
+                            category: 'engagement',
+                            feedback: 'Faible engagement. Tes abonnés ne voient pas tes posts ou ne sont pas assez intéressés pour interagir.'
+                        },
+                        {
+                            text: '8-15 likes et 3-5 commentaires régulièrement',
+                            score: 7,
+                            category: 'engagement',
+                            feedback: 'Correct ! Mais quel que soit ton secteur d\'activité, on peut faire beaucoup mieux.'
+                        },
+                        {
+                            text: 'Plus de 15 likes et 5+ commentaires par post',
+                            score: 10,
+                            category: 'engagement',
+                            feedback: 'WOW ! Excellente communauté engagée ! Tu as créé une vraie connexion avec ton audience.'
+                        },
+                        {
+                            text: 'Je ne regarde jamais ces statistiques',
+                            score: 1,
+                            category: 'analytics',
+                            feedback: 'Comment optimiser sans mesurer ? {{name}}, il faut absolument suivre tes performances !'
+                        }
+                    ]
+                },
+                
+                // 5. Stories Instagram
+                {
+                    id: 'stories_strategy',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '📖', role: 'Analyse Stories' },
+                    dialogue: 'Les Stories, c\'est ton ARME SECRÈTE !<br><br>500 millions de personnes regardent les Stories chaque jour. C\'est là que tu créés la vraie connexion et que tu convertis !',
+                    question: 'Comment tu utilises tes Stories Instagram ?',
+                    choices: [
+                        {
+                            text: 'Je n\'en fais jamais ou très rarement',
+                            score: 1,
+                            category: 'engagement',
+                            feedback: 'Tu jettes 70% de ton potentiel à la poubelle !'
+                        },
+                        {
+                            text: 'Parfois, pour montrer ma vie / mes produits',
+                            score: 4,
+                            category: 'engagement',
+                            feedback: 'Tu gaspilles un outil de conversion exceptionnel !'
+                        },
+                        {
+                            text: 'Régulièrement avec sondages, questions, interactions',
+                            score: 9,
+                            category: 'engagement',
+                            feedback: 'PARFAIT ! Tu maîtrises l\'engagement sur Stories !'
+                        },
+                        {
+                            text: 'Tous les jours + behind-the-scenes + call-to-actions',
+                            score: 10,
+                            category: 'engagement',
+                            feedback: 'EXCEPTIONNELLE stratégie Stories ! Tu es une pro !'
+                        }
+                    ]
+                },
+                
+                // 6. Call-to-actions
+                {
+                    id: 'call_to_actions',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '📢', role: 'Analyse conversion' },
+                    dialogue: 'ATTENTION, on arrive au cœur du problème !<br><br>Tu peux avoir le meilleur contenu du monde, si tu ne dis JAMAIS à tes abonnés quoi faire ensuite... ils ne feront RIEN !',
+                    question: 'Dans tes posts, tu utilises des call-to-actions (CTA) :',
+                    choices: [
+                        {
+                            text: 'Jamais, je trouve ça trop commercial',
+                            score: 1,
+                            category: 'monetization',
+                            feedback: 'ERREUR FATALE ! Sans CTA, pas de conversion possible.'
+                        },
+                        {
+                            text: 'Parfois un "lien en bio" quand je vends',
+                            score: 4,
+                            category: 'monetization',
+                            feedback: 'Trop faible ! Un CTA par post minimum.'
+                        },
+                        {
+                            text: 'J\'incite à commenter, liker, partager',
+                            score: 6,
+                            category: 'engagement',
+                            feedback: 'Bien pour l\'engagement ! Mais où sont les CTA business ?'
+                        },
+                        {
+                            text: 'CTA clairs dans chaque post (commenter, aller en bio, DM...)',
+                            score: 10,
+                            category: 'monetization',
+                            feedback: 'PARFAIT ! Tu guides tes abonnés vers l\'action !'
+                        }
+                    ]
+                },
+                
+                // 7. Monétisation
+                {
+                    id: 'monetization_current',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '💰', role: 'Analyse business' },
+                    dialogue: 'Maintenant la question qui compte vraiment !<br><br>Soyons honnêtes : ton Instagram, il te rapporte COMBIEN par mois actuellement ? (Ventes directes ou indirectes grâce à Instagram)',
+                    question: 'Ton chiffre d\'affaires mensuel généré via Instagram :',
+                    choices: [
+                        {
+                            text: '0€ - Mon Instagram ne me rapporte rien pour l\'instant',
+                            score: 0,
+                            category: 'monetization',
+                            feedback: 'Instagram dormant ! Il y a un énorme potentiel inexploité quel que soit ton secteur d\'activité.'
+                        },
+                        {
+                            text: '1€ à 300€ par mois',
+                            score: 3,
+                            category: 'monetization',
+                            feedback: 'Tu commences à monétiser, mais c\'est largement insuffisant pour un compte business !'
+                        },
+                        {
+                            text: '300€ à 1000€ par mois',
+                            score: 6,
+                            category: 'monetization',
+                            feedback: 'Bien ! Tu as compris le principe, mais on peut facilement doubler ces résultats.'
+                        },
+                        {
+                            text: '1000€ à 3000€ par mois',
+                            score: 8,
+                            category: 'monetization',
+                            feedback: 'Très bien ! Tu maîtrises déjà pas mal la monétisation Instagram.'
+                        },
+                        {
+                            text: 'Plus de 3000€ par mois',
+                            score: 10,
+                            category: 'monetization',
+                            feedback: 'EXCELLENT ! Tu as transformé ton Instagram en vraie machine à ventes !'
+                        }
+                    ]
+                },
+                
+                // 8. Analyse et optimisation
+                {
+                    id: 'analytics_usage',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '📊', role: 'Analyse data' },
+                    dialogue: 'Les données, c\'est ce qui sépare les amatrices des professionnelles !<br><br>Comment tu veux optimiser si tu sais pas ce qui marche ?',
+                    question: 'Tu utilises les statistiques Instagram pour :',
+                    choices: [
+                        {
+                            text: 'Je regarde jamais les stats, j\'y comprends rien',
+                            score: 1,
+                            category: 'analytics',
+                            feedback: 'Tu pilotes à l\'aveugle ! Catastrophique.'
+                        },
+                        {
+                            text: 'Je jette un œil de temps en temps',
+                            score: 4,
+                            category: 'analytics',
+                            feedback: 'Pas assez ! Les stats doivent guider ta stratégie.'
+                        },
+                        {
+                            text: 'Je consulte régulièrement mes métriques principales',
+                            score: 7,
+                            category: 'analytics',
+                            feedback: 'Bien ! Tu commences à piloter avec les data.'
+                        },
+                        {
+                            text: 'J\'analyse tout et j\'adapte ma stratégie selon les résultats',
+                            score: 10,
+                            category: 'analytics',
+                            feedback: 'PARFAIT ! Approche pro et data-driven !'
+                        }
+                    ]
+                },
+                
+                // 9. Cohérence visuelle
+                {
+                    id: 'visual_consistency',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '🎨', role: 'Analyse esthétique' },
+                    dialogue: 'L\'œil mange en premier !<br><br>Un feed Instagram cohérent, c\'est comme une vitrine bien agencée : ça donne envie de rentrer dans la boutique !',
+                    question: 'Ton feed Instagram a :',
+                    choices: [
+                        {
+                            text: 'Aucune cohérence, je poste ce qui me passe par la tête',
+                            score: 2,
+                            category: 'profile',
+                            feedback: 'Aucune identité visuelle = aucune mémorisation !'
+                        },
+                        {
+                            text: 'Quelques éléments récurrents mais pas vraiment de ligne',
+                            score: 5,
+                            category: 'profile',
+                            feedback: 'Tu commences à y penser, mais c\'est pas encore ça !'
+                        },
+                        {
+                            text: 'Une palette couleur et un style photo cohérents',
+                            score: 8,
+                            category: 'profile',
+                            feedback: 'Très bien ! Identité visuelle reconnaissable.'
+                        },
+                        {
+                            text: 'Feed ultra-cohérent : couleurs, typographies, style reconnaissable',
+                            score: 10,
+                            category: 'profile',
+                            feedback: 'WOW ! Feed professionnel qui marque les esprits !'
+                        }
+                    ]
+                },
+                
+                // 10. Objectifs et vision
+                {
+                    id: 'business_goals',
+                    type: 'choice',
+                    character: { name: 'Miss Sherlock Hat', emoji: '🎯', role: 'Analyse stratégique' },
+                    dialogue: 'Dernière question !<br><br>Dis-moi : c\'est quoi ton objectif #1 avec Instagram dans les 6 prochains mois ?',
+                    question: 'Mon objectif prioritaire avec mon Instagram business :',
+                    choices: [
+                        {
+                            text: 'Faire connaître mon travail et avoir plus de visibilité',
+                            score: 6,
+                            category: 'profile',
+                            feedback: 'Compréhensible ! Mais la visibilité sans stratégie ne se convertit pas en ventes.'
+                        },
+                        {
+                            text: 'Créer une communauté qui me fait confiance et s\'engage',
+                            score: 9,
+                            category: 'engagement',
+                            feedback: 'Excellente approche ! La confiance et l\'engagement sont la base de toute vente.'
+                        },
+                        {
+                            text: 'Générer plus de demandes et vendre mes produits/services',
+                            score: 10,
+                            category: 'monetization',
+                            feedback: 'PARFAIT ! Vision business claire et réaliste.'
+                        },
+                        {
+                            text: 'Éduquer mon audience sur ma thématique/expertise',
+                            score: 8,
+                            category: 'content',
+                            feedback: 'Très bien ! Éduquer positionne comme expert et prépare à la vente.'
+                        },
+                        {
+                            text: 'Partager ma passion et inspirer d\'autres personnes',
+                            score: 5,
+                            category: 'content',
+                            feedback: 'L\'inspiration c\'est bien, mais où est ta stratégie de conversion en clients ?'
+                        },
+                        {
+                            text: 'Avoir plus d\'abonnés (objectif chiffré)',
+                            score: 3,
+                            category: 'profile',
+                            feedback: 'Attention ! Les abonnés ne paient pas les factures. Focus sur l\'engagement et les ventes.'
+                        }
+                    ]
+                }
+            ];
+            
+            this.init = function() {
+                this.showQuestion();
+            };
+            
+            this.showQuestion = function() {
+                var question = this.questions[this.currentQuestion];
+                var progress = Math.round((this.currentQuestion / this.questions.length) * 100);
+                
+                var content = document.getElementById('game-content');
+                
+                // Personnaliser le dialogue selon les réponses précédentes
+                var dialogue = this.personalizeDialogue(question.dialogue);
+                
+                var html = '<div class="floating-elements">' +
+                    '<div class="floating-element">🎩</div>' +
+                    '<div class="floating-element">📊</div>' +
+                    '<div class="floating-element">💡</div>' +
+                '</div>' +
+                '<div class="progress-bar"><div class="progress-fill" style="width: ' + progress + '%"></div></div>' +
+                    '<div style="text-align: center; margin-bottom: 15px; color: #666; font-size: 0.9em;">Question ' + (this.currentQuestion + 1) + ' sur ' + this.questions.length + ' • ' + Math.round(progress) + '% complété</div>';
+                
+                html += '<div class="story-panel">' +
+                    '<div class="character">' +
+                        '<div class="avatar ' + (this.currentQuestion > 5 ? 'pulse-animation' : '') + '">' + question.character.emoji + '</div>' +
+                        '<div class="character-info">' +
+                            '<h3>' + question.character.name + '</h3>' +
+                            '<div class="character-role">' + question.character.role + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="dialogue typing-effect" style="animation-delay: 0.5s;">' + dialogue + '</div>' +
+                '</div>';
+                
+                if (question.type === 'input') {
+                    html += '<div class="question-container">' +
+                        '<div class="question-title">' + question.question + '</div>' +
+                        '<input type="text" class="input-field" id="user-input" placeholder="Tape ta réponse ici...">' +
+                        '<button class="continue-btn pulse-animation" onclick="audit.handleInput()">Continuer l\'audit →</button>' +
+                    '</div>';
+                } else if (question.type === 'choice') {
+                    html += '<div class="question-container">' +
+                        '<div class="question-title">' + question.question + '</div>' +
+                        '<div class="choices-container">';
+                    
+                    for (var i = 0; i < question.choices.length; i++) {
+                        html += '<div class="choice-btn" onclick="audit.selectChoice(' + i + ')">' +
+                            question.choices[i].text +
+                        '</div>';
+                    }
+                    
+                    html += '</div></div>';
+                }
+                
+                content.innerHTML = html;
+                
+                // Focus sur l'input si c'est une question input
+                if (question.type === 'input') {
+                    setTimeout(function() {
+                        document.getElementById('user-input').focus();
+                    }, 100);
+                }
+                
+                // Déclencher des notifications contextuelles
+                this.triggerContextualNotifications();
+            };
+            
+            this.personalizeDialogue = function(originalDialogue) {
+                var dialogue = originalDialogue;
+                
+                // Remplacer les variables de base
+                dialogue = dialogue.replace(/\{\{name\}\}/g, this.userData.name || '');
+                dialogue = dialogue.replace(/\{\{business_description\}\}/g, this.userData.business_description || 'ton activité');
+                dialogue = dialogue.replace(/\{\{services_target\}\}/g, this.userData.services_target || 'tes services');
+                
+                // Personnalisation contextuelle selon les réponses précédentes
+                var currentScore = this.calculateCurrentScore();
+                
+                if (dialogue.includes('{{engagement_intro}}')) {
+                    if (currentScore > 70) {
+                        dialogue = dialogue.replace('{{engagement_intro}}', 'Vu tes bonnes réponses précédentes, je parie que tu maîtrises aussi l\'engagement !');
+                    } else if (currentScore < 40) {
+                        dialogue = dialogue.replace('{{engagement_intro}}', 'Après tes réponses précédentes, je soupçonne que l\'engagement aussi pose problème...');
+                    } else {
+                        dialogue = dialogue.replace('{{engagement_intro}}', 'Tes réponses précédentes sont mitigées. Voyons si l\'engagement compense !');
+                    }
+                }
+                
+                return dialogue;
+            };
+            
+            this.triggerContextualNotifications = function() {
+                var currentScore = this.calculateCurrentScore();
+                var questionNum = this.currentQuestion;
+                
+                if (questionNum === 5 && currentScore < 30) {
+                    setTimeout(() => {
+                        this.showNotification('⚠️ Attention ! Tes scores sont en dessous de la moyenne...', 'warning');
+                    }, 2000);
+                } else if (questionNum === 5 && currentScore > 70) {
+                    setTimeout(() => {
+                        this.showNotification('🔥 Excellent ! Tu es au-dessus de 90% des comptes !', 'success');
+                    }, 2000);
+                } else if (questionNum === 8) {
+                    setTimeout(() => {
+                        this.showNotification('🎯 Plus que quelques questions ! Le diagnostic arrive...', 'info');
+                    }, 1500);
+                }
+            };
+            
+            this.handleInput = function() {
+                var input = document.getElementById('user-input').value.trim();
+                if (!input) {
+                    alert('Merci de répondre pour continuer !');
+                    return;
+                }
+                
+                var question = this.questions[this.currentQuestion];
+                this.userData[question.field] = input;
+                
+                this.nextQuestion();
+            };
+            
+            this.selectChoice = function(choiceIndex) {
+                var question = this.questions[this.currentQuestion];
+                var choice = question.choices[choiceIndex];
+                
+                // Enregistrer la réponse
+                this.userData.responses[question.id] = {
+                    choice: choiceIndex,
+                    score: choice.score,
+                    category: choice.category,
+                    feedback: choice.feedback
+                };
+                
+                // Mettre à jour les scores
+                if (choice.category && choice.score) {
+                    this.userData.scores[choice.category] += choice.score;
+                }
+                
+                // Marquer le choix comme sélectionné visuellement
+                var choices = document.querySelectorAll('.choice-btn');
+                choices.forEach(function(btn) { btn.classList.remove('selected'); });
+                choices[choiceIndex].classList.add('selected');
+                
+                // Créer des étincelles d'animation
+                this.createSparkles(choices[choiceIndex]);
+                
+                // Afficher un insight en temps réel
+                this.showInstantInsight(choice);
+                
+                // Afficher score intermédiaire si c'est une question importante
+                if (this.currentQuestion % 3 === 0 && this.currentQuestion > 0) {
+                    setTimeout(() => {
+                        this.showIntermediateScore();
+                    }, 1500);
+                }
+                
+                // Continuer après un délai
+                setTimeout(() => {
+                    this.nextQuestion();
+                }, choice.score >= 8 ? 2000 : 1200); // Plus de temps pour les bonnes réponses
+            };
+            
+            this.createSparkles = function(element) {
+                var rect = element.getBoundingClientRect();
+                for (var i = 0; i < 8; i++) {
+                    var sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                    sparkle.style.animationDelay = (Math.random() * 0.5) + 's';
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 1500);
+                }
+            };
+            
+            this.showInstantInsight = function(choice) {
+                var insights = {
+                    'very_good': ['🔥 Excellente réponse !', 'Tu es sur la bonne voie !', '💎 Stratégie de pro !'],
+                    'good': ['👍 Pas mal !', 'Tu commences à comprendre !', '✨ C\'est un bon début !'],
+                    'average': ['🤔 Moyen...', 'Tu peux mieux faire !', '⚠️ Attention à ça !'],
+                    'poor': ['😬 Aïe aïe aïe...', 'Houston, on a un problème !', '🚨 Erreur critique !']
+                };
+                
+                var level = choice.score >= 8 ? 'very_good' : choice.score >= 6 ? 'good' : choice.score >= 4 ? 'average' : 'poor';
+                var insightTexts = insights[level];
+                var randomInsight = insightTexts[Math.floor(Math.random() * insightTexts.length)];
+                
+                var popup = document.createElement('div');
+                popup.className = 'insights-popup show';
+                popup.innerHTML = '<div class="insight-title">' + randomInsight + '</div><div class="insight-text">' + choice.feedback + '</div>';
+                document.body.appendChild(popup);
+                
+                setTimeout(() => {
+                    popup.classList.remove('show');
+                    setTimeout(() => popup.remove(), 500);
+                }, 2500);
+            };
+            
+            this.showIntermediateScore = function() {
+                var currentScore = this.calculateCurrentScore();
+                var category = this.getCurrentDominantCategory();
+                
+                var scoreDiv = document.createElement('div');
+                scoreDiv.className = 'score-reveal';
+                scoreDiv.innerHTML = 
+                    '<h4>📊 Score Intermédiaire</h4>' +
+                    '<div class="mini-score">' + currentScore + '%</div>' +
+                    '<div class="category-badge">' + category + '</div>' +
+                    '<div style="font-size: 0.9em; margin-top: 10px;">Miss Sherlock Hat analyse tes réponses...</div>';
+                
+                document.getElementById('game-content').appendChild(scoreDiv);
+                
+                setTimeout(() => {
+                    scoreDiv.style.opacity = '0';
+                    setTimeout(() => scoreDiv.remove(), 500);
+                }, 3000);
+            };
+            
+            this.calculateCurrentScore = function() {
+                var totalScore = 0;
+                var maxPossible = 0;
+                
+                for (var category in this.userData.scores) {
+                    totalScore += this.userData.scores[category];
+                }
+                
+                // Estimation basée sur les questions répondues
+                maxPossible = this.currentQuestion * 10; // Approximation
+                
+                return Math.round((totalScore / maxPossible) * 100) || 0;
+            };
+            
+            this.getCurrentDominantCategory = function() {
+                var categories = {
+                    profile: 'Expert Profil',
+                    content: 'Créateur de Contenu',
+                    engagement: 'Community Builder',
+                    monetization: 'Business Strategist',
+                    analytics: 'Data Analyst'
+                };
+                
+                var maxScore = 0;
+                var dominantCat = 'profile';
+                
+                for (var cat in this.userData.scores) {
+                    if (this.userData.scores[cat] > maxScore) {
+                        maxScore = this.userData.scores[cat];
+                        dominantCat = cat;
+                    }
+                }
+                
+                return categories[dominantCat];
+            };
+            
+            this.showNotification = function(message, type) {
+                var toast = document.createElement('div');
+                toast.className = 'notification-toast show';
+                toast.style.background = type === 'success' ? '#28a745' : type === 'warning' ? '#ffc107' : '#dc3545';
+                toast.style.color = type === 'warning' ? '#333' : 'white';
+                toast.innerHTML = message;
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3000);
+            };
+            
+            this.nextQuestion = function() {
+                this.currentQuestion++;
+                
+                if (this.currentQuestion < this.questions.length) {
+                    this.showQuestion();
+                } else {
+                    this.generateResults();
+                }
+            };
+            
+            this.generateResults = function() {
+                var scores = this.userData.scores;
+                
+                // Normaliser les scores sur 100 (ajustement pour les nouvelles questions)
+                var maxScores = {
+                    profile: 40,  // 4 questions max (bio + visual + business_goals + nouvelles)
+                    content: 40,  // 4 questions max (strategy + frequency + motivation + nouvelles)
+                    engagement: 30, // 3 questions max
+                    monetization: 20, // 2 questions max  
+                    analytics: 20   // 2 questions max
+                };
+                
+                var normalizedScores = {};
+                var totalScore = 0;
+                var totalQuestions = 0;
+                
+                for (var category in scores) {
+                    normalizedScores[category] = Math.round((scores[category] / maxScores[category]) * 100);
+                    totalScore += normalizedScores[category];
+                    totalQuestions++;
+                }
+                
+                var overallScore = Math.round(totalScore / totalQuestions);
+                
+                this.displayResults(overallScore, normalizedScores);
+            };
+            
+            this.displayResults = function(overallScore, scores) {
+                var content = document.getElementById('game-content');
+                var name = this.userData.name;
+                var businessDesc = this.userData.business_description || 'ton activité';
+                var servicesTarget = this.userData.services_target || 'tes services';
+                
+                // Déterminer le niveau global
+                var level = '';
+                var levelMessage = '';
+                
+                if (overallScore >= 80) {
+                    level = 'L\'Expert Confirmé';
+                    levelMessage = name + ', tu maîtrises Instagram comme un(e) PRO ! Quelques optimisations et tu vas exploser tes résultats !';
+                } else if (overallScore >= 60) {
+                    level = 'Le Pro en Devenir';
+                    levelMessage = name + ', tu as de très bonnes bases ! Avec les bonnes corrections, tu vas passer au niveau supérieur !';
+                } else if (overallScore >= 40) {
+                    level = 'L\'Entrepreneur Motivé';
+                    levelMessage = name + ', tu as du potentiel mais des erreurs critiques te freinent. Ce plan d\'action va tout changer !';
+                } else {
+                    level = 'Le Débutant Courageux';
+                    levelMessage = name + ', on repart de zéro mais c\'est parfait ! Tu as un énorme potentiel inexploité !';
+                }
+                
+                var html = '<div class="story-panel">' +
+                    '<div class="character">' +
+                        '<div class="avatar">🎯</div>' +
+                        '<div class="character-info">' +
+                            '<h3>Miss Sherlock Hat</h3>' +
+                            '<div class="character-role">Audit Expert Terminé</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="dialogue">' +
+                        '<strong>' + name + ', l\'audit complet de "' + businessDesc + '" est terminé !</strong><br><br>' +
+                        'J\'ai analysé tes réponses pour te donner un diagnostic personnalisé. Voici ton plan d\'action...' +
+                    '</div>' +
+                '</div>';
+                
+                // Score global avec animation progressive
+                html += '<div class="score-overview" style="position: relative; overflow: hidden;">' +
+                    '<div class="floating-elements">' +
+                        '<div class="floating-element">📈</div>' +
+                        '<div class="floating-element">🎯</div>' +
+                        '<div class="floating-element">💎</div>' +
+                    '</div>' +
+                    '<h2>🏆 Instagram Health Score</h2>' +
+                    '<div class="main-score" id="animated-score" style="opacity: 0;">0%</div>' +
+                    '<div style="font-size: 1.3em; margin-top: 15px;">Profil Business : <strong>"' + level + '"</strong></div>' +
+                    '<div style="font-size: 0.9em; opacity: 0.9; margin-top: 10px;">Basé sur tes réponses personnalisées</div>' +
+                    '<div style="margin-top: 20px;">' +
+                        '<div style="display: inline-block; margin: 5px; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.9em;">' +
+                            'Secteur: ' + (businessDesc.length > 30 ? businessDesc.substring(0, 30) + '...' : businessDesc) +
+                        '</div>' +
+                        '<div style="display: inline-block; margin: 5px; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.9em;">' +
+                            'Cible: ' + (servicesTarget.length > 25 ? servicesTarget.substring(0, 25) + '...' : servicesTarget) +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+                
+                // Animation progressive du score
+                setTimeout(() => {
+                    var scoreElement = document.getElementById('animated-score');
+                    if (scoreElement) {
+                        scoreElement.style.opacity = '1';
+                        scoreElement.style.transition = 'all 2s ease';
+                        this.animateScore(scoreElement, overallScore);
+                    }
+                }, 1000);
+                
+                // Graphique radar personnalisé
+                html += this.generateRadarChart(scores);
+                
+                // Scores détaillés par catégorie avec barres de progression
+                html += '<div style="background: white; padding: 25px; border-radius: 15px; margin: 25px 0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);">' +
+                    '<h3 style="color: var(--hat-primary); font-size: 1.6em; margin-bottom: 20px; text-align: center;">📊 Détail des Performances</h3>' +
+                    '<div class="score-sections">';
+                
+                var categories = {
+                    profile: { name: 'Profil & Bio', icon: '👤' },
+                    content: { name: 'Stratégie Contenu', icon: '📱' },
+                    engagement: { name: 'Engagement', icon: '💬' },
+                    monetization: { name: 'Monétisation', icon: '💰' },
+                    analytics: { name: 'Analytics', icon: '📊' }
+                };
+                
+                for (var cat in categories) {
+                    var score = scores[cat] || 0;
+                    var className = score >= 70 ? 'excellent' : (score >= 50 ? 'good' : 'needs-work');
+                    var color = score >= 70 ? '#28a745' : (score >= 50 ? '#ffc107' : '#dc3545');
+                    
+                    html += '<div class="score-section ' + className + '" style="position: relative; overflow: hidden;">' +
+                        '<div class="section-title">' + categories[cat].icon + ' ' + categories[cat].name + '</div>' +
+                        '<div class="section-score" style="position: relative; z-index: 2;">' + score + '%</div>' +
+                        '<div style="position: absolute; bottom: 0; left: 0; height: ' + (score * 0.8) + '%; background: linear-gradient(to top, ' + color + '30, ' + color + '10); width: 100%; transition: height 2s ease; z-index: 1;"></div>' +
+                        '<div style="font-size: 0.8em; margin-top: 10px; opacity: 0.8;">' + this.getScoreMessage(score) + '</div>' +
+                    '</div>';
+                }
+                
+                html += '</div></div>';
+                
+                // Système de badges obtenus
+                html += this.generateAchievementBadges(scores, overallScore);
+                
+                // Recommandations personnalisées
+                html += this.generateAdvancedRecommendations(scores, overallScore);
+                
+                // Plan d'action personnalisé 1 mois
+                html += this.generate30DayActionPlan(scores, overallScore);
+                
+                // Message final personnalisé selon le profil
+                var personalizedMessage = this.getPersonalizedFinalMessage(levelMessage, businessDesc, servicesTarget, overallScore);
+                html += '<div class="final-message">' +
+                    '<h3>💎 Message Personnel de Miss Sherlock Hat</h3>' +
+                    '<p style="font-size: 1.1em; line-height: 1.6; margin-top: 15px;">' + personalizedMessage + '</p>' +
+                    '<p style="font-size: 0.95em; opacity: 0.9; margin-top: 15px;">Applique ces conseils et reviens me dire tes résultats ! 🎩</p>' +
+                '</div>';
+                
+                // Boutons d'action
+                html += '<div class="action-buttons">' +
+                    '<button class="restart-btn" onclick="location.reload()" style="background: linear-gradient(135deg, #6c757d, #495057); transform: scale(0.95); transition: transform 0.3s ease;" onmouseover="this.style.transform=\'scale(1)\'" onmouseout="this.style.transform=\'scale(0.95)\'">🔄 Faire un autre audit</button>' +
+                    '<button class="bonus-btn pulse-animation" onclick="audit.showBonus()" style="background: linear-gradient(135deg, var(--success-green), #20c997); font-size: 1.2em;">🎁 Mes Templates & Conseils</button>' +
+                '</div>';
+                
+                content.innerHTML = html;
+                
+                // Scroll en haut pour voir les résultats avec animation fluide
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Déclencher les animations progressives
+                this.triggerResultAnimations();
+            };
+            
+            this.generateAdvancedRecommendations = function(scores, overallScore) {
+                var recommendations = [];
+                
+                // Recommandations basées sur les scores
+                if (scores.profile < 50) {
+                    recommendations.push({
+                        priority: 'high',
+                        title: 'URGENT : Refonte complète de ton profil',
+                        description: 'Ta bio ne convertit pas ! Ajoute une proposition de valeur claire, un CTA et optimise tes highlights.',
+                        timeframe: 'Cette semaine'
+                    });
+                }
+                
+                if (scores.content < 60) {
+                    recommendations.push({
+                        priority: 'high',
+                        title: 'Revoir ta stratégie de contenu',
+                        description: 'Applique la règle 80/20 : 80% de valeur gratuite, 20% de promotion. Crée un calendrier éditorial.',
+                        timeframe: 'Ce mois'
+                    });
+                }
+                
+                if (scores.engagement < 50) {
+                    recommendations.push({
+                        priority: 'high',
+                        title: 'Booster ton engagement d\'urgence',
+                        description: 'Publie 3 posts avec questions cette semaine. Lance des sondages en Stories. Réponds à TOUS les commentaires.',
+                        timeframe: 'Cette semaine'
+                    });
+                }
+                
+                if (scores.monetization < 40) {
+                    recommendations.push({
+                        priority: 'medium',
+                        title: 'Créer ton funnel de vente Instagram',
+                        description: 'Ajoute des CTA dans chaque post. Crée une landing page. Développe une offre irrésistible.',
+                        timeframe: '1 mois'
+                    });
+                }
+                
+                if (scores.analytics < 30) {
+                    recommendations.push({
+                        priority: 'medium',
+                        title: 'Mise en place du tracking',
+                        description: 'Consulte tes Instagram Insights chaque semaine. Identifie tes meilleurs posts et reproduis ce qui marche.',
+                        timeframe: '2 semaines'
+                    });
+                }
+                
+                // Recommandations d'optimisation si bon score global
+                if (overallScore >= 70) {
+                    recommendations.push({
+                        priority: 'low',
+                        title: 'Optimisation avancée',
+                        description: 'Teste de nouveaux formats (Reels, carrousels). Lance des collaborations. Automatise avec des outils pros.',
+                        timeframe: '3 mois'
+                    });
+                }
+                
+                var html = '<div class="recommendations">' +
+                    '<h3>🎯 Ton Plan d\'Action Prioritaire</h3>';
+                
+                for (var i = 0; i < recommendations.length; i++) {
+                    var rec = recommendations[i];
+                    html += '<div class="recommendation-item priority-' + rec.priority + '">' +
+                        '<div class="priority-badge ' + rec.priority + '">' + 
+                            (rec.priority === 'high' ? 'PRIORITÉ HAUTE' : 
+                             rec.priority === 'medium' ? 'PRIORITÉ MOYENNE' : 'PRIORITÉ BASSE') + 
+                        '</div>' +
+                        '<h4>' + rec.title + '</h4>' +
+                        '<p>' + rec.description + '</p>' +
+                        '<small><strong>Délai :</strong> ' + rec.timeframe + '</small>' +
+                    '</div>';
+                }
+                
+                html += '</div>';
+                
+                return html;
+            };
+            
+            this.triggerResultAnimations = function() {
+                // Animation en cascade des éléments
+                var elements = document.querySelectorAll('.score-section, .recommendation-item, .action-item');
+                elements.forEach(function(el, index) {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(20px)';
+                    setTimeout(function() {
+                        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+                
+                // Notification de fin d'audit
+                setTimeout(() => {
+                    this.showNotification('🎉 Audit terminé ! Ton plan d\'action est prêt !', 'success');
+                }, 2000);
+            };
+            
+            this.showBonus = function() {
+                var content = document.getElementById('game-content');
+                content.innerHTML += 
+                    '<div style="background: linear-gradient(135deg, var(--success-green), #20c997); color: white; padding: 30px; border-radius: 15px; margin: 25px 0;">' +
+                        '<h3 style="text-align: center; margin-bottom: 20px;">🎁 BONUS : Templates Instagram Universels</h3>' +
+                        
+                        '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; margin: 15px 0;">' +
+                            '<h4>📝 Template Bio Polyvalent</h4>' +
+                            '<div style="background: rgba(255,255,255,0.9); color: #333; padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 0.9em;">' +
+                                '"[Ton activité] pour [ta cible]<br>' +
+                                '✨ [Ce qui te rend unique/différent]<br>' +
+                                '📍 [Ta localisation si pertinente]<br>' +
+                                '👇 [Ton call-to-action principal]"<br><br>' +
+                                
+                                '<strong>Exemples :</strong><br>' +
+                                '• "Bijoux uniques faits main pour femmes authentiques"<br>' +
+                                '• "Photographe mariage en Normandie"<br>' +
+                                '• "Naturopathe pour familles bienveillantes"' +
+                            '</div>' +
+                        '</div>' +
+                        
+                        '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; margin: 15px 0;">' +
+                            '<h4>📱 Template Post Educatif</h4>' +
+                            '<div style="background: rgba(255,255,255,0.9); color: #333; padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 0.9em;">' +
+                                '"❌ Erreur courante : [problème que tu observes souvent]<br><br>' +
+                                '✅ Meilleure approche :<br>' +
+                                '• [Conseil 1]<br>' +
+                                '• [Conseil 2]<br>' +
+                                '• [Conseil 3]<br><br>' +
+                                '💬 Et toi, tu faisais cette erreur ?<br>' +
+                                '📩 DM pour plus d\'infos !"<br><br>' +
+                                
+                                '<strong>Exemples :</strong><br>' +
+                                '• Bijoutier : "Erreur : nettoyer l\'argent avec du dentifrice"<br>' +
+                                '• Photographe : "Erreur : shooter en plein soleil à midi"<br>' +
+                                '• Thérapeute : "Erreur : ignorer les signaux de stress"' +
+                            '</div>' +
+                        '</div>' +
+                        
+                        '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; margin: 15px 0;">' +
+                            '<h4>🏆 Template Story Interactive</h4>' +
+                            '<div style="background: rgba(255,255,255,0.9); color: #333; padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 0.9em;">' +
+                                '"Question du jour 🤔<br><br>' +
+                                'Quel est ton plus gros défi avec [ta thématique] ?<br><br>' +
+                                'A) [Option 1]<br>' +
+                                'B) [Option 2]<br>' +
+                                'C) [Option 3]<br><br>' +
+                                'Vote et je te donne mes conseils en DM ! 💌"<br><br>' +
+                                
+                                '<strong>Exemples :</strong><br>' +
+                                '• Créateur : "défi avec tes créations"<br>' +
+                                '• Formateur : "défi avec l\'apprentissage"<br>' +
+                                '• Artisan : "défi avec ton savoir-faire"' +
+                            '</div>' +
+                        '</div>' +
+                        
+                        '<div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; margin: 15px 0;">' +
+                            '<h4>🌟 Template Transformation/Avant-Après</h4>' +
+                            '<div style="background: rgba(255,255,255,0.9); color: #333; padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 0.9em;">' +
+                                '"✨ Transformation du jour !<br><br>' +
+                                'AVANT : [situation initiale]<br>' +
+                                'APRÈS : [résultat obtenu]<br><br>' +
+                                '🔑 Ce qui a fait la différence :<br>' +
+                                '[Ton expertise/produit/méthode]<br><br>' +
+                                '💭 Raconte-moi ta propre expérience en commentaire !"<br><br>' +
+                                
+                                '<strong>Exemples :</strong><br>' +
+                                '• Coiffeur : avant/après coupe<br>' +
+                                '• Déco : avant/après pièce<br>' +
+                                '• Coach : avant/après mental client' +
+                            '</div>' +
+                        '</div>' +
+                        
+                        '<div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.15); border-radius: 15px;">' +
+                            '<h4>💡 Conseils d\'utilisation</h4>' +
+                            '<p style="font-size: 0.9em; line-height: 1.4;">• Adapte le vocabulaire à ton secteur<br>' +
+                            '• Reste authentique dans ton ton<br>' +
+                            '• Teste plusieurs formats pour voir ce qui marche<br>' +
+                            '• N\'oublie jamais le call-to-action</p>' +
+                        '</div>' +
+                        
+                        '<div style="text-align: center; margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 15px;">' +
+                            '<h4>🎩 Miss Hat Studio</h4>' +
+                            '<p style="font-size: 0.85em;">Suis-moi pour plus d\'astuces Instagram pour solopreneurs !</p>' +
+                        '</div>' +
+                    '</div>';
+                
+                // Scroll vers le bonus
+                setTimeout(function() {
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            };
+        }
+        
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', function() {
+            audit = new InstagramAudit();
+            audit.init();
+        });
+    </script>
+</body>
+</html>
